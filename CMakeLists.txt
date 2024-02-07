@@ -13,7 +13,7 @@ project(brotli C)
 option(BUILD_SHARED_LIBS "Build shared libraries" ON)
 
 option(BROTLI_DISABLE_TESTS "Disable tests" ON)
-set(BROTLI_TEST_PREFIX "brotli_")
+set(BROTLI_TEST_PREFIX "brotli.")
 
 if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
   message(STATUS "Setting build type to Release as none was specified.")
@@ -105,7 +105,7 @@ unset(LOG2_RES)
 set(BROTLI_INCLUDE_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/c/include")
 mark_as_advanced(BROTLI_INCLUDE_DIRS)
 
-set(BROTLI_LIBRARIES_CORE brotli_brotlienc brotli_brotlidec brotli_brotlicommon)
+set(BROTLI_LIBRARIES_CORE brotli.brotlienc brotli.brotlidec brotli.brotlicommon)
 set(BROTLI_LIBRARIES ${BROTLI_LIBRARIES_CORE} ${LIBM_LIBRARY})
 mark_as_advanced(BROTLI_LIBRARIES)
 
@@ -124,53 +124,55 @@ if(BROTLI_EMSCRIPTEN)
 endif()
 
 file(GLOB_RECURSE BROTLI_COMMON_SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} c/common/*.c)
-add_library(brotli_brotlicommon STATIC ${BROTLI_COMMON_SOURCES})
-set_target_properties(brotli_brotlicommon PROPERTIES OUTPUT_NAME "brotlicommon")
+add_library(brotli.brotlicommon STATIC ${BROTLI_COMMON_SOURCES})
+set_target_properties(brotli.brotlicommon PROPERTIES OUTPUT_NAME "brotlicommon")
 
 file(GLOB_RECURSE BROTLI_DEC_SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} c/dec/*.c)
-add_library(brotli_brotlidec STATIC ${BROTLI_DEC_SOURCES})
-set_target_properties(brotli_brotlidec PROPERTIES OUTPUT_NAME "brotlidec")
+add_library(brotli.brotlidec STATIC ${BROTLI_DEC_SOURCES})
+set_target_properties(brotli.brotlidec PROPERTIES OUTPUT_NAME "brotlidec")
 
 file(GLOB_RECURSE BROTLI_ENC_SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} c/enc/*.c)
-add_library(brotli_brotlienc STATIC ${BROTLI_ENC_SOURCES})
-set_target_properties(brotli_brotlienc PROPERTIES OUTPUT_NAME "brotlienc")
+add_library(brotli.brotlienc STATIC ${BROTLI_ENC_SOURCES})
+set_target_properties(brotli.brotlienc PROPERTIES OUTPUT_NAME "brotlienc")
 
-add_library(brotli::brotlicommon ALIAS brotli_brotlicommon)
-set_target_properties(brotli_brotlicommon PROPERTIES EXPORT_NAME "brotlicommon")
+add_library(brotli::brotlicommon ALIAS brotli.brotlicommon)
+set_target_properties(brotli.brotlicommon PROPERTIES EXPORT_NAME "brotlicommon")
 
-add_library(brotli::brotlidec ALIAS brotli_brotlidec)
-set_target_properties(brotli_brotlidec PROPERTIES EXPORT_NAME "brotlidec")
+add_library(brotli::brotlidec ALIAS brotli.brotlidec)
+set_target_properties(brotli.brotlidec PROPERTIES EXPORT_NAME "brotlidec")
 
-add_library(brotli::brotlienc ALIAS brotli_brotlienc)
-set_target_properties(brotli_brotlienc PROPERTIES EXPORT_NAME "brotlienc")
+add_library(brotli::brotlienc ALIAS brotli.brotlienc)
+set_target_properties(brotli.brotlienc PROPERTIES EXPORT_NAME "brotlienc")
 
 # Older CMake versions does not understand INCLUDE_DIRECTORIES property.
 include_directories(${BROTLI_INCLUDE_DIRS})
 
 if(BUILD_SHARED_LIBS)
-  set(BROTLI_LIBRARIES_CORE_SHARED brotli_brotlienc_shared brotli_brotlidec_shared brotli_brotlicommon_shared)
+  set(BROTLI_LIBRARIES_CORE_SHARED brotli.brotlienc_shared brotli.brotlidec_shared brotli.brotlicommon_shared)
 
-  add_library(brotli_brotlicommon_shared SHARED ${BROTLI_COMMON_SOURCES})
-  set_target_properties(brotli_brotlicommon_shared PROPERTIES OUTPUT_NAME "brotlicommon")
+  add_library(brotli.brotlicommon_shared SHARED ${BROTLI_COMMON_SOURCES})
+  set_target_properties(brotli.brotlicommon_shared PROPERTIES OUTPUT_NAME "brotlicommon")
 
-  add_library(brotli_brotlidec_shared SHARED ${BROTLI_DEC_SOURCES})
-  set_target_properties(brotli_brotlidec_shared PROPERTIES OUTPUT_NAME "brotlidec")
+  add_library(brotli.brotlidec_shared SHARED ${BROTLI_DEC_SOURCES})
+  set_target_properties(brotli.brotlidec_shared PROPERTIES OUTPUT_NAME "brotlidec")
 
-  add_library(brotli_brotlienc_shared SHARED ${BROTLI_ENC_SOURCES})
-  set_target_properties(brotli_brotlienc_shared PROPERTIES OUTPUT_NAME "brotlienc")
+  add_library(brotli.brotlienc_shared SHARED ${BROTLI_ENC_SOURCES})
+  set_target_properties(brotli.brotlienc_shared PROPERTIES OUTPUT_NAME "brotlienc")
 
-  add_library(brotli::brotlicommon_shared ALIAS brotli_brotlicommon_shared)
-  set_target_properties(brotli_brotlicommon_shared PROPERTIES EXPORT_NAME "brotlicommon_shared")
+  add_library(brotli::brotlicommon_shared ALIAS brotli.brotlicommon_shared)
+  set_target_properties(brotli.brotlicommon_shared PROPERTIES EXPORT_NAME "brotlicommon_shared")
 
-  add_library(brotli::brotlidec_shared ALIAS brotli_brotlidec_shared)
-  set_target_properties(brotli_brotlidec_shared PROPERTIES EXPORT_NAME "brotlidec_shared")
+  add_library(brotli::brotlidec_shared ALIAS brotli.brotlidec_shared)
+  set_target_properties(brotli.brotlidec_shared PROPERTIES EXPORT_NAME "brotlidec_shared")
 
-  add_library(brotli::brotlienc_shared ALIAS brotli_brotlienc_shared)
-  set_target_properties(brotli_brotlienc_shared PROPERTIES EXPORT_NAME "brotlienc_shared")
+  add_library(brotli::brotlienc_shared ALIAS brotli.brotlienc_shared)
+  set_target_properties(brotli.brotlienc_shared PROPERTIES EXPORT_NAME "brotlienc_shared")
 
   foreach(lib ${BROTLI_LIBRARIES_CORE_SHARED})
     target_compile_definitions(${lib} PUBLIC "BROTLI_SHARED_COMPILATION" )
     string(TOUPPER "${lib}" LIB)
+    string(REGEX MATCH "[^.]+\\.(.*)" LIB ${LIB})
+    set(LIB ${CMAKE_MATCH_1})
     set_target_properties (${lib} PROPERTIES DEFINE_SYMBOL "${LIB}_SHARED_COMPILATION")
   endforeach()
 
@@ -190,12 +192,12 @@ foreach(lib ${BROTLI_LIBRARIES_CORE})
 endforeach()
 
 #if(NOT BROTLI_EMSCRIPTEN)
-target_link_libraries(brotli_brotlidec brotli_brotlicommon)
-target_link_libraries(brotli_brotlienc brotli_brotlicommon)
+target_link_libraries(brotli.brotlidec brotli.brotlicommon)
+target_link_libraries(brotli.brotlienc brotli.brotlicommon)
 
 if(BUILD_SHARED_LIBS)
-target_link_libraries(brotli_brotlidec_shared brotli_brotlicommon_shared)
-target_link_libraries(brotli_brotlienc_shared brotli_brotlicommon_shared)
+  target_link_libraries(brotli.brotlidec_shared brotli.brotlicommon_shared)
+  target_link_libraries(brotli.brotlienc_shared brotli.brotlicommon_shared)
 endif()
 #endif()
 
@@ -211,14 +213,14 @@ if(BROTLI_PARENT_DIRECTORY)
 endif()
 
 # Build the brotli executable
-add_executable(brotli_brotli c/tools/brotli.c)
-target_link_libraries(brotli_brotli ${BROTLI_LIBRARIES})
+add_executable(brotli.brotli c/tools/brotli.c)
+target_link_libraries(brotli.brotli ${BROTLI_LIBRARIES})
 
 # Installation
 #if(NOT BROTLI_BUNDLED_MODE)
 if(NOT SKIP_INSTALL_FILES AND NOT SKIP_INSTALL_ALL)
   install(
-    TARGETS brotli_brotli
+    TARGETS brotli.brotli
     EXPORT brotli
     RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
   )
