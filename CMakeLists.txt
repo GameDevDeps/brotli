@@ -10,7 +10,7 @@ cmake_minimum_required(VERSION 3.15)
 cmake_policy(SET CMP0048 NEW)
 project(brotli C)
 
-option(BUILD_SHARED_LIBS "Build shared libraries" ON)
+#option(BUILD_SHARED_LIBS "Build shared libraries" ON)
 
 option(BROTLI_DISABLE_TESTS "Disable tests" ON)
 set(BROTLI_TEST_PREFIX "brotli.")
@@ -119,9 +119,9 @@ elseif(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
   set(CMAKE_INSTALL_NAME_DIR "${CMAKE_INSTALL_PREFIX}/lib")
 endif()
 
-if(BROTLI_EMSCRIPTEN)
-  set(BUILD_SHARED_LIBS OFF)
-endif()
+#if(BROTLI_EMSCRIPTEN)
+#  set(BUILD_SHARED_LIBS OFF)
+#endif()
 
 file(GLOB_RECURSE BROTLI_COMMON_SOURCES RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} c/common/*.c)
 add_library(brotli.brotlicommon STATIC ${BROTLI_COMMON_SOURCES})
@@ -147,37 +147,13 @@ set_target_properties(brotli.brotlienc PROPERTIES EXPORT_NAME "brotlienc")
 # Older CMake versions does not understand INCLUDE_DIRECTORIES property.
 include_directories(${BROTLI_INCLUDE_DIRS})
 
-if(BUILD_SHARED_LIBS)
-  set(BROTLI_LIBRARIES_CORE_SHARED brotli.brotlienc_shared brotli.brotlidec_shared brotli.brotlicommon_shared)
-
-  add_library(brotli.brotlicommon_shared SHARED ${BROTLI_COMMON_SOURCES})
-  set_target_properties(brotli.brotlicommon_shared PROPERTIES OUTPUT_NAME "brotlicommon")
-
-  add_library(brotli.brotlidec_shared SHARED ${BROTLI_DEC_SOURCES})
-  set_target_properties(brotli.brotlidec_shared PROPERTIES OUTPUT_NAME "brotlidec")
-
-  add_library(brotli.brotlienc_shared SHARED ${BROTLI_ENC_SOURCES})
-  set_target_properties(brotli.brotlienc_shared PROPERTIES OUTPUT_NAME "brotlienc")
-
-  add_library(brotli::brotlicommon_shared ALIAS brotli.brotlicommon_shared)
-  set_target_properties(brotli.brotlicommon_shared PROPERTIES EXPORT_NAME "brotlicommon_shared")
-
-  add_library(brotli::brotlidec_shared ALIAS brotli.brotlidec_shared)
-  set_target_properties(brotli.brotlidec_shared PROPERTIES EXPORT_NAME "brotlidec_shared")
-
-  add_library(brotli::brotlienc_shared ALIAS brotli.brotlienc_shared)
-  set_target_properties(brotli.brotlienc_shared PROPERTIES EXPORT_NAME "brotlienc_shared")
-
-  foreach(lib ${BROTLI_LIBRARIES_CORE_SHARED})
-    target_compile_definitions(${lib} PUBLIC "BROTLI_SHARED_COMPILATION" )
-    string(TOUPPER "${lib}" LIB)
-    string(REGEX MATCH "[^.]+\\.(.*)" LIB ${LIB})
-    set(LIB ${CMAKE_MATCH_1})
-    set_target_properties (${lib} PROPERTIES DEFINE_SYMBOL "${LIB}_SHARED_COMPILATION")
-  endforeach()
-
-  list(APPEND BROTLI_LIBRARIES_CORE ${BROTLI_LIBRARIES_CORE_SHARED})
-endif()
+#if(BUILD_SHARED_LIBS)
+#  foreach(lib ${BROTLI_LIBRARIES_CORE})
+#    target_compile_definitions(${lib} PUBLIC "BROTLI_SHARED_COMPILATION" )
+#    string(TOUPPER "${lib}" LIB)
+#    set_target_properties (${lib} PROPERTIES DEFINE_SYMBOL "${LIB}_SHARED_COMPILATION")
+#  endforeach()
+#endif()
 
 foreach(lib ${BROTLI_LIBRARIES_CORE})
   target_link_libraries(${lib} ${LIBM_LIBRARY})
@@ -191,15 +167,10 @@ foreach(lib ${BROTLI_LIBRARIES_CORE})
   set_property(TARGET ${lib} APPEND PROPERTY INTERFACE_INCLUDE_DIRECTORIES "$<BUILD_INTERFACE:${BROTLI_INCLUDE_DIRS}>")
 endforeach()
 
-#if(NOT BROTLI_EMSCRIPTEN)
+if(NOT BROTLI_EMSCRIPTEN)
 target_link_libraries(brotli.brotlidec brotli.brotlicommon)
 target_link_libraries(brotli.brotlienc brotli.brotlicommon)
-
-if(BUILD_SHARED_LIBS)
-  target_link_libraries(brotli.brotlidec_shared brotli.brotlicommon_shared)
-  target_link_libraries(brotli.brotlienc_shared brotli.brotlicommon_shared)
 endif()
-#endif()
 
 # For projects stuck on older versions of CMake, this will set the
 # BROTLI_INCLUDE_DIRS and BROTLI_LIBRARIES variables so they still
